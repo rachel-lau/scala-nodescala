@@ -39,7 +39,7 @@ class NodeScalaSuite extends FunSuite {
     val f2 = Future {2}
     val all = Future.all(List(f1, f2))
 
-    assert(Await.result(all, 0 nanos) == List(1,2))
+    assert(Await.result(all, 1 nanos) == List(1,2))
   }
 
   test("Future.all fails if any of the futures in the list cannot be completed") {
