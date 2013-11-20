@@ -39,7 +39,7 @@ class NodeScalaSuite extends FunSuite {
     val f2 = Future {2}
     val all = Future.all(List(f1, f2))
 
-    assert(Await.result(all, 1 nanos) == List(1,2))
+    assert(Await.result(all, 1 second) == List(1,2))
   }
 
   test("Future.all fails if any of the futures in the list cannot be completed") {
@@ -49,6 +49,26 @@ class NodeScalaSuite extends FunSuite {
 
     try {
       Await.result(all, 1 second)
+      assert(false)
+    } catch {
+      case t: TimeoutException => // ok!
+    }
+  }
+
+  test("Future.delay") {
+    val delay = Future.delay(1 second)
+    try {
+      Await.result(delay, 2 second)
+      assert(true)
+    } catch {
+      case t: TimeoutException => assert(false)
+    }
+  }
+
+  test("Future.delay timeout") {
+    val delay = Future.delay(2 second)
+    try {
+      Await.result(delay, 1 second)
       assert(false)
     } catch {
       case t: TimeoutException => // ok!
