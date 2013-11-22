@@ -36,11 +36,19 @@ package object nodescala {
      *
      *  E.g.:
      *
-     *      Future.any(List(Future { 1 }, Future { 2 }, Future { throw new Exception }))
+     *      Future.any(List(Future { 1 }, Future { 2 }future, Future { throw new Exception }))
      *
      *  may return a `Future` succeeded with `1`, `2` or failed with an `Exception`.
      */
-    def any[T](fs: List[Future[T]]): Future[T] = ???
+    def any[T](fs: List[Future[T]]): Future[T] = {
+      val p = Promise[T]()
+      var _fs = fs
+      while (_fs != Nil) {
+        _fs.head onComplete { p.tryComplete(_) }
+        _fs = _fs.tail
+      }
+      p.future
+    }
 
     /** Returns a future with a unit value that is completed after time `t`.
      */
