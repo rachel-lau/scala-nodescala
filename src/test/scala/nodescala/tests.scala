@@ -86,6 +86,11 @@ class NodeScalaSuite extends FunSuite {
     assert(result == xresult)
   }
 
+  test("Future.now") {
+    val f = future {1}
+    assert(f.now == 1)
+  }
+
   ignore("Promises") {
     val f1 = future { blocking{Thread.sleep(1000)}; println("f1"); 1}
     val f2 = future { blocking{Thread.sleep(20)}; println("f2"); 2}
