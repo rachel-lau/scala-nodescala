@@ -116,6 +116,19 @@ class NodeScalaSuite extends FunSuite {
     assert(Await.result(f2, 1 second) == 0)
   }
 
+  test("Future.continue exception") {
+    val f1 = Future[Int] {0}
+    val f2 = f1 continue {
+      case anyValue => 2 / anyValue.get
+    }
+    try {
+      Await.result(f2, 1 second)
+      assert(false)
+    } catch {
+      case t: ArithmeticException => // ok!
+    }
+  }
+
   ignore("Promises") {
     val f1 = future { blocking{Thread.sleep(1000)}; println("f1"); 1}
     val f2 = future { blocking{Thread.sleep(20)}; println("f2"); 2}
