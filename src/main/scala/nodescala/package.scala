@@ -79,10 +79,12 @@ package object nodescala {
      *  depending on the current state of the `Future`.
      */
     def now: T = {
-      if (f.isCompleted) 
-        f.value.get.get
-      else
-        throw new NoSuchElementException
+      val v = f.value
+      v match {
+        case Some(Success(s)) => s
+        case Some(Failure(t)) => throw t
+        case None => throw new NoSuchElementException
+      }
     }
 
     /** Continues the computation of this future by taking the current future

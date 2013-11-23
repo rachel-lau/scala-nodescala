@@ -91,6 +91,27 @@ class NodeScalaSuite extends FunSuite {
     assert(f.now == 1)
   }
 
+  test("Future.now non-complete") {
+    val f = Future[Int] { while (true) { }; 3 }
+    try {
+      f.now
+    } catch {
+      case t: NoSuchElementException => // ok !
+    }    
+  }
+
+  test("Future.now exception") {
+    val f = Future[Int] { throw new IllegalStateException }
+    f onComplete {
+      case anyValue => try {
+        f.now
+        assert(false)
+      } catch {
+        case t: IllegalStateException => // ok !
+      }
+    }    
+  }
+
   test("Future.continueWith") {
     val result = Future[String] {
       throw new IllegalStateException
