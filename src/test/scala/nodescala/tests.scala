@@ -91,7 +91,7 @@ class NodeScalaSuite extends FunSuite {
     assert(f.now == 1)
   }
 
-  test("Future.now non-complete") {
+  ignore("Future.now non-complete") {
     val f = Future[Int] { while (true) { }; 3 }
     try {
       f.now
@@ -110,13 +110,6 @@ class NodeScalaSuite extends FunSuite {
         case t: IllegalStateException => // ok !
       }
     }    
-  }
-
-  test("Future.continueWith") {
-    val result = Future[String] {
-      throw new IllegalStateException
-    } continueWith { f => "continued" }
-    assert(Await.result(result, 1 second) == "continued")
   }
 
   test("Future.continue") {
@@ -148,6 +141,13 @@ class NodeScalaSuite extends FunSuite {
     } catch {
       case t: ArithmeticException => // ok!
     }
+  }
+
+  test("Future.continueWith") {
+    val result = Future[String] {
+      throw new IllegalStateException
+    } continueWith { f => "continued" }
+    assert(Await.result(result, 1 second) == "continued")
   }
 
   ignore("Promises") {
