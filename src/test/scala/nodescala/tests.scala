@@ -271,7 +271,7 @@ class NodeScalaSuite extends FunSuite {
     }
   }
 
-  ignore("Listener should serve the next request as a future") {
+  test("Listener should serve the next request as a future") {
     val dummy = new DummyListener(8191, "/test")
     val subscription = dummy.start()
 
