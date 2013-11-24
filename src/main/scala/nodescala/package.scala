@@ -97,12 +97,12 @@ package object nodescala {
       val p = Promise[S]()
       f onComplete {
         case anyValue => {
-        try {
-          val s = cont(f)
-          p.success(s)
-        } catch {
-          case t: Throwable => p.failure(t)
-        }
+          try {
+            val s = cont(f)
+            p.success(s)
+          } catch {
+            case t: Throwable => p.failure(t)
+          }
         }
       }
       p.future
@@ -173,7 +173,15 @@ package object nodescala {
   object CancellationTokenSource {
     /** Creates a new `CancellationTokenSource`.
      */
-    def apply(): CancellationTokenSource = ???
+    def apply(): CancellationTokenSource = new CancellationTokenSource {
+      var p = Promise[Unit]()
+      val cancellationToken = new CancellationToken {
+        def isCancelled = p.future.value != None
+      }
+      def unsubscribe() {
+        p.trySuccess(())
+      }
+    }
   }
 
 }

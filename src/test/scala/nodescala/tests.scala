@@ -179,7 +179,7 @@ class NodeScalaSuite extends FunSuite {
     assert(Await.result(f, 4 seconds) == 2)
   }
 
-  ignore("CancellationTokenSource should allow stopping the computation") {
+  test("CancellationTokenSource should allow stopping the computation") {
     val cts = CancellationTokenSource()
     val ct = cts.cancellationToken
     val p = Promise[String]()
