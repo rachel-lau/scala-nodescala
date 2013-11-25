@@ -32,9 +32,7 @@ trait NodeScala {
   private def respond(exchange: Exchange, token: CancellationToken, response: Response): Unit = {
     while (response.hasNext) {
       val s = response.next
-      println("s=" + s)
       if (token.nonCancelled) {
-        println("write(s)=" + s)
         exchange.write(s)
       }
     }
