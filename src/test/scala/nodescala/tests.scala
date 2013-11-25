@@ -289,7 +289,7 @@ class NodeScalaSuite extends FunSuite {
     subscription.unsubscribe()
   }
 
-  ignore("Server should serve requests") {
+  test("Server should serve requests") {
     val dummy = new DummyServer(8191)
     val dummySubscription = dummy.start("/testDir") {
       request => for (kv <- request.iterator) yield (kv + "\n").toString
